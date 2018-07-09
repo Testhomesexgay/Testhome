@@ -28,10 +28,10 @@
                     <div class="col-sm-12">
                         <!-- Example Events -->
                         <div class="example-wrap">
-                            <h4 class="example-title">项目列表</h4>
+                            <h4 class="example-title">配置列表</h4>
                             <div class="example">
                                 <div class="alert alert-success"  >
-                                    项目列表
+                                    用例列表
                                 </div>
                                 <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
                                     <a type="button" class="btn btn-outline btn-default" href="/add_project/">
@@ -48,33 +48,32 @@
                                     <thead>
                                         <tr>
                                             <th data-field="state" data-checkbox="true"></th>
-                                            <th >ID</th>
-                                            <th >项目名称</th>
-                                            <th >负责人</th>
-                                            <th >测试人员</th>
-                                            <th >开发人员</th>
-                                            <th >相关应用</th>
-                                            <th >简要概述</th>
-                                            <th >其他信息</th>
+{#                                            <th >ID</th>#}
+                                            <th >配置接口</th>
+                                            <th >所属项目</th>
+                                            <th >关联模块</th>
+                                            <th >创 建 者</th>
+                                            <th >创建时间</th>
+                                            <th >是否有效</th>
                                             <th >操作</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tb">
-                                    {% for row in project_list %}
+                                    <tbody id="tb" >
+                                    {% for row in config_list %}
                                         <tr tb_id="{{ row.id }}">
-                                            <td name="project_id">{{ row.id }}</td>
-                                            <td name="projects_id">{{ row.id }}</td>
-                                            <td name="project_name">{{ row.project_name }}</td>
-                                            <td name="responsible_name">{{ row.responsible_name }}</td>
-                                            <td name="test_user">{{ row.test_user }}</td>
-                                            <td name="dev_user">{{ row.dev_user }}</td>
-                                            <td name="publish_app">{{ row.publish_app }}</td>
-                                            <td name="simple_desc">{{ row.simple_desc }}</td>
-                                            <td name="other_desc">{{ row.other_desc }}</td>
+                                            <td name="case_id">{{ row.id }}</td>
+{#                                            <td name="case_id">{{ row.id }}</td>#}
+                                            <td name="name">{{ row.name }}</td>
+                                            <td name="belong_project">{{ row.belong_project }}</td>
+                                            <td name="belong_module_id">{{ row.belong_module.models_name }}</td>
+                                            <td name="author">{{ row.author }}</td>
+                                            <td name="create_time">{{ row.create_time }}</td>
+                                            <td name="status">{{ row.status }}</td>
                                             <td >
-                                                <a class="fa fa-pencil icon edit-row" href="/edit_project.html?id={{ row.id }}"></a>
+{#                                                <a class="fa fa-pencil icon edit-row"  href="/edit_case.html?id={{ row.id }}"></a>#}
+                                                <a class="fa fa-pencil icon edit-row"  onclick="post('/api/edit_config/', {'id':'{{ row.id }}'})"></a>
+                                                <a class="fa fa-bug " onclick="post('/api/run_case/', {'id':'{{ row.id }}', 'mode':'run_by_test'})"></a>
                                                 <a class="fa fa-trash-o fa-fw"></a>
-                                                <a class="fa fa-bug"></a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -103,6 +102,49 @@
 
     <!-- Peity -->
     <script src="../../static/js/bootstrap-table-demo.js"></script>
+    <script>
+        function runtest(case_id) {
+            var id=case_id;
+            var mode='run_by_test';
+            var testcase = {
+                "id":id,
+                "mode":mode
+            };
+            $.ajax({
+                type:'post',
+                url:'/api/run_case/',
+                data:testcase,
+                dataType: 'JSON',
+                success:function (data) {
+                    var obj=window.open("about:blank");
+                    obj.document.write(data);
+
+                }
+
+            })
+
+
+        }
+    </script>
+    <script>
+   function post(URL, PARAMS) {
+    var temp = document.createElement("form");
+    temp.action = URL;
+    temp.method = "post";
+    temp.target = "_blank";
+    temp.style.display = "none";
+    for (var x in PARAMS) {
+        var opt = document.createElement("input");
+        opt.name = x;
+        opt.value = PARAMS[x];
+        temp.appendChild(opt);
+    }
+    document.body.appendChild(temp);
+    temp.submit();
+    return temp;
+}
+</script>
+
 
 </body>
 

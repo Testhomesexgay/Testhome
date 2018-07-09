@@ -142,13 +142,25 @@ class ModuleInfoManager(models.Manager):
         return self.filter(belong_project__project_name__exact=belong_project)\
             .values_list('module_name',flat=True).order_by('-create_time')
 
+    def get_module_by_id(self, index, type=True):
+        '''
+        通过id查询module
+        :param index:
+        :param type:
+        :return:
+        '''
+        if type:
+            return self.filter(id=index).all()
+        else:
+            return self.get(id=index).models_name
+
 
 '''用例信息表操作'''
 
 
 class TestCaseInfoManager(models.Manager):
 
-    def insert_case(self,**kwargs):
+    def insert_case(self,modules,**kwargs):
         '''
         处理前端返回的json，提取字段，插入sql
         :param belong_module:
@@ -156,8 +168,9 @@ class TestCaseInfoManager(models.Manager):
         :return:
         '''
         case_info = kwargs.get('test').pop('case_info')
-        self.create(name=kwargs.get('test').get('name'), belong_project=case_info.pop('project'),
-                    belong_module_id=case_info.pop('module'),author=case_info.pop('author'), include=case_info.pop('include'), request=kwargs)
+        print('插入数据库',kwargs)
+        self.create(name=kwargs.get('test').get('name'), belong_project=case_info.pop('belong_project_id'),
+                    belong_module_id=modules,author=case_info.pop('author'), include=case_info.pop('include'), request=kwargs)
 
     def update_case(self, **kwargs):
         '''
@@ -197,7 +210,8 @@ class TestCaseInfoManager(models.Manager):
         :return:
         '''
         config_info = kwargs.get('config').pop('config_info')
-        obj = self.get(id=int(config_info.pop('test_index')))
+        config =kwargs.get('config')
+        obj = self.get(id=int(config.pop('test_index')))
         obj.name = kwargs.get('config').get('name')
         obj.author = config_info.pop('config_author')
         obj.request = kwargs
@@ -211,7 +225,7 @@ class TestCaseInfoManager(models.Manager):
         :param belong_project:
         :return:
         '''
-        print(name, module_name, belong_project)
+        print('通过模块名和项目名统计单个项目的case数量',name, module_name, belong_project)
         return self.filter(belong_module_id=module_name).filter(name__exact=name).filter(
             belong_project__exact=belong_project).count()
 
@@ -226,3 +240,21 @@ class TestCaseInfoManager(models.Manager):
             return self.filter(id=index).all()
         else:
             return self.get(id=index).name
+
+    def del_case(self,id):
+        try:
+            obj =self.get(id=id)
+            status=self.values('status').filter(id=id)
+            if status[0].get('status') ==1:
+                obj.status=2
+                obj.save()
+            else:
+                obj.status =1
+                obj.save()
+        except:
+            #print('出现bug了')
+            return '出现bug了'
+
+
+
+

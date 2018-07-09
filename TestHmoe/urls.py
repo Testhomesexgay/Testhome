@@ -35,8 +35,15 @@ urlpatterns = [
     url(r'^api/run_case/',run_test),
     url(r'^edit_case.html$', edit_case),
     url(r'^api/edit_case/', edit_case),
+    url(r'^api/del_case/',del_case),
     url(r'^404/', page_not_found),
     url(r'^500/', page_error),
     url(r'^test/',test),
-    url(r'^version/filter_app/',filterAppFromSite)
+    url(r'^version/filter_app/',filterAppFromSite),
+    url(r'^add_config.html',add_config),
+    url(r'api/add_config/',add_config),
+    url(r'^config_list.html',config_list),
+    url(r'^edit_config.html$', edit_config),
+    url(r'^api/edit_config/', edit_config),
+
 ]
