@@ -72,7 +72,7 @@
 {#                                                <a class="fa fa-pencil icon edit-row"  href="/edit_case.html?id={{ row.id }}"></a>#}
                                                 <a class="fa fa-pencil icon edit-row"  onclick="post('/api/edit_case/', {'id':'{{ row.id }}'})"></a>
                                                 <a class="fa fa-bug" onclick="post('/api/run_case/', {'id':'{{ row.id }}', 'mode':'run_by_test'})"></a>
-                                                <a class="fa fa-trash-o fa-fw" onclick="post('/api/del_case/',{'id':'{{ row.id }}'})"></a>
+                                                <a class="fa fa-trash-o fa-fw" onclick="deletecase('{{ row.id }}')"></a>
 
                                             </td>
                                         </tr>
@@ -122,11 +122,35 @@
         }
     </script>
     <script>
+        function deletecase(case_id) {
+            var delcase = {
+                "id": case_id
+            };
+            console.log(delcase);
+            $.ajax({
+                type: 'post',
+                url: '/api/del_case/',
+                data: JSON.stringify(delcase),
+                contentType: "application/json",
+                success: function (data) {
+                    alert(data);
+                    window.location.reload();
+                }
+
+            })
+
+
+        }
+    </script>
+    <script>
    function post(URL, PARAMS) {
     var temp = document.createElement("form");
     temp.action = URL;
     temp.method = "post";
+    //设置本页面的默认连接在新页面打开
     temp.target = "_blank";
+    //设置在本页面打开
+    {#temp.target = "_self";#}
     temp.style.display = "none";
     for (var x in PARAMS) {
         var opt = document.createElement("input");
@@ -139,29 +163,7 @@
     return temp;
    }
 </script>
-<script>
-    function deletecase(case_id) {
-        var id = case_id;
-        var delcase = {
-            "id": id
-        };
-        $.ajax({
-            type: 'post',
-            url: '/api/del_case/',
-            data: delcase,
-            dataType: 'JSON',
-            success: function (datas) {
-                alert(datas);
-                //window.setTimeout("alert('Hello, world')", 1000);
-                window.history.back();
-                window.location.reload();
-            }
 
-        })
-
-
-    }
-</script>
 
 
 </body>

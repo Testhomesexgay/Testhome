@@ -135,16 +135,10 @@ def edit_case(request):
             return HttpResponse(get_ajax_msg(msg, '用例信息更新成功'))
 
 def del_case(request):
-    id = request.POST.get('id')
-    msg = del_cases(id)
-    #return HttpResponseRedirect('/case_list.html','用例已删除')
-    return HttpResponse(get_ajax_msg(msg, '用例已删除'))
-
-    # if request.method=='POST':
-    #     id=request.POST.get('id')
-    #     del_cases(id)
-    #     case_list = CaseInfo.objects.filter(type=1).filter(status=1).all()
-    #     return render(request,'case_list.html',{'case_list':case_list})
+    if request.is_ajax():
+        del_case = json.loads(request.body.decode('utf-8'))
+        msg=del_cases(del_case.get('id'))
+        return HttpResponse(get_ajax_msg(msg, '用例已删除'))
 
 
 
