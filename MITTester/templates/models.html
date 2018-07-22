@@ -21,86 +21,108 @@
 </head>
 
 <body class="gray-bg">
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="ibox float-e-margins">
-            <div class="ibox-content">
-                <div class="row row-lg">
-                    <div class="col-sm-12">
-                        <!-- Example Events -->
-                        <div class="example-wrap">
-                            <h4 class="example-title">项目列表</h4>
-                            <div class="example">
-                                <div class="alert alert-success"  >
-                                    项目列表
-                                </div>
-                                <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
-                                    <a type="button" class="btn btn-outline btn-default" href="add_models.html">
-                                        <i class="glyphicon glyphicon-plus" aria-hidden="true" ></i>
-                                    </a>
-                                    <button type="button" class="btn btn-outline btn-default">
-                                        <i class="glyphicon glyphicon-heart" aria-hidden="true"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline btn-default">
-                                        <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                                <table id="exampleTableEvents" data-height="400" data-mobile-responsive="true">
-                                    <thead>
-                                        <tr>
-                                            <th data-field="state" data-checkbox="true"></th>
-                                            <th >ID</th>
-                                            <th >模块名称</th>
-                                            <th >所属项目</th>
-                                            <th >状   态</th>
-                                            <th >简要概述</th>
-                                            <th >其他信息</th>
-                                            <th >操作</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tb">
-                                    {% for row in models_list %}
-                                        <tr tb_id="{{ row.id }}">
-                                            <td name="models_id">{{ row.id }}</td>
-                                            <td name="models_id">{{ row.id }}</td>
-                                            <td name="models_name">{{ row.models_name }}</td>
-                                            <td name="belong_project_id" id="{{ row.belong_project }}">{{ row.belong_project.project_name }}</td>
-                                            <td name="status" id="{{ row.status }}">{{ row.status.status }}</td>
-                                            <td name="models_desc">{{ row.models_desc }}</td>
-                                            <td name="other_desc">{{ row.other_desc }}</td>
-                                            <td >
-                                                <a class="fa fa-pencil icon edit-row" href="/edit_models.html?id={{ row.id }}"></a>
-                                                <a class="fa fa-trash-o fa-fw"></a>
-                                                <a class="fa fa-bug"></a>
-
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <!-- Example Events -->
+                    <div class="example-wrap">
+                        <h4 class="example-title">项目列表</h4>
+                        <div class="example">
+                            <div class="alert alert-success">
+                                项目列表
                             </div>
+                            <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                                <a type="button" class="btn btn-outline btn-default" href="add_models.html">
+                                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                </a>
+                                <button type="button" class="btn btn-outline btn-default">
+                                    <i class="glyphicon glyphicon-heart" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline btn-default">
+                                    <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <table id="exampleTableEvents" data-height="400" data-mobile-responsive="true">
+                                <thead>
+                                <tr>
+                                    <th data-field="state" data-checkbox="true"></th>
+                                    <th>ID</th>
+                                    <th>模块名称</th>
+                                    <th>所属项目</th>
+                                    <th>状 态</th>
+                                    <th>简要概述</th>
+                                    <th>其他信息</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tb">
+                                {% for row in models_list %}
+                                    <tr tb_id="{{ row.id }}">
+                                        <td name="models_id">{{ row.id }}</td>
+                                        <td name="models_id">{{ row.id }}</td>
+                                        <td name="models_name">{{ row.models_name }}</td>
+                                        <td name="belong_project_id"
+                                            id="{{ row.belong_project }}">{{ row.belong_project.project_name }}</td>
+                                        <td name="status" id="{{ row.status }}">{{ row.status.status }}</td>
+                                        <td name="models_desc">{{ row.models_desc }}</td>
+                                        <td name="other_desc">{{ row.other_desc }}</td>
+                                        <td>
+                                            <a class="fa fa-pencil icon edit-row"
+                                               href="/edit_models.html?id={{ row.id }}"></a>
+                                            <a class="fa fa-trash-o fa-fw"></a>
+                                            <a class="fa fa-bug" onclick="post('/api/run_case/', {'id':'{{ row.id }}', 'mode':'run_by_module'})"></a>
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
-                        <!-- End Example Events -->
                     </div>
+                    <!-- End Example Events -->
                 </div>
             </div>
         </div>
-        <!-- End Panel Other -->
     </div>
+    <!-- End Panel Other -->
+</div>
 
-    <!-- 全局js -->
-    <script src="../../static/js/jquery.min.js?v=2.1.4"></script>
-    <script src="../../static/js/bootstrap.min.js?v=3.3.6"></script>
+<!-- 全局js -->
+<script src="../../static/js/jquery.min.js?v=2.1.4"></script>
+<script src="../../static/js/bootstrap.min.js?v=3.3.6"></script>
 
-    <!-- 自定义js -->
-    <script src="../../static/js/content.js?v=1.0.0"></script>
-    <!-- Bootstrap table -->
-    <script src="../../static/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="../../static/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
-    <script src="../../static/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!-- 自定义js -->
+<script src="../../static/js/content.js?v=1.0.0"></script>
+<!-- Bootstrap table -->
+<script src="../../static/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../../static/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="../../static/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
 
-    <!-- Peity -->
-    <script src="../../static/js/bootstrap-table-demo.js"></script>
-
+<!-- Peity -->
+<script src="../../static/js/bootstrap-table-demo.js"></script>
+<script>
+    function post(URL, PARAMS) {
+        var temp = document.createElement("form");
+        temp.action = URL;
+        temp.method = "post";
+        //设置本页面的默认连接在新页面打开
+        temp.target = "_blank";
+        //设置在本页面打开
+        {#temp.target = "_self";#}
+        temp.style.display = "none";
+        for (var x in PARAMS) {
+            var opt = document.createElement("input");
+            opt.name = x;
+            opt.value = PARAMS[x];
+            temp.appendChild(opt);
+        }
+        document.body.appendChild(temp);
+        temp.submit();
+        return temp;
+    }
+</script>
 
 
 </body>

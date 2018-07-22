@@ -203,17 +203,21 @@ class TestCaseInfoManager(models.Manager):
                     belong_module=belong_module,
                     author=config_info.pop('config_author'), type=2, request=kwargs)
 
-    def update_config(self, **kwargs):
+    def update_config(self,moduleid,**kwargs):
         '''
         处理前端返回项目配置json，提取字段，更新sql
         :param kwargs:
         :return:
         '''
+        print('传入dao层的数据',kwargs)
         config_info = kwargs.get('config').pop('config_info')
         config =kwargs.get('config')
         obj = self.get(id=int(config.pop('test_index')))
         obj.name = kwargs.get('config').get('name')
         obj.author = config_info.pop('config_author')
+        obj.belong_project =config_info.pop('project')
+        print(moduleid)
+        obj.belong_module_id=int(moduleid)
         obj.request = kwargs
         obj.save()
 

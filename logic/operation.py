@@ -144,7 +144,11 @@ def add_config_data(type, **kwargs):
                     and case_opt.get_case_name(name, model_id, project) > 0:
                 return '用例或配置已在该模块中存在，请重新命名'
             else:
-                case_opt.update_config(**kwargs)
+                print('来到这里，更新逻辑')
+                models_id = module_opt.values('id').get(models_name=module)
+                print(models_id)
+                model_id = str(models_id.get('id'))
+                case_opt.update_config(model_id,**kwargs)
     except DataError:
         return '字段长度超长，请重新编辑'
     return 'ok'
@@ -158,4 +162,6 @@ def change_status(Model, **kwargs):
     obj.status = kwargs.pop('status')
     obj.save()
     return 'ok'
+
+
 

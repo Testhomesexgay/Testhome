@@ -45,5 +45,7 @@ urlpatterns = [
     url(r'^config_list.html',config_list),
     url(r'^edit_config.html$', edit_config),
     url(r'^api/edit_config/', edit_config),
+    url(r'^api/run_module',run_batch_test)
+
 
 ]

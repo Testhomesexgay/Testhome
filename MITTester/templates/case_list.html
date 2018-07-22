@@ -33,7 +33,7 @@
                                     用例列表
                                 </div>
                                 <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
-                                    <a type="button" class="btn btn-outline btn-default" href="/add_project/">
+                                    <a type="button" class="btn btn-outline btn-default" href="add_case.html">
                                         <i class="glyphicon glyphicon-plus" aria-hidden="true" ></i>
                                     </a>
                                     <button type="button" class="btn btn-outline btn-default">
@@ -67,7 +67,7 @@
                                             <td name="belong_module_id">{{ row.belong_module.models_name }}</td>
                                             <td name="author">{{ row.author }}</td>
                                             <td name="create_time">{{ row.create_time }}</td>
-                                            <td name="status">{{ row.status }}</td>
+                                            <td name="status" id="{{ row.status }}">{{ row.status }}</td>
                                             <td >
 {#                                                <a class="fa fa-pencil icon edit-row"  href="/edit_case.html?id={{ row.id }}"></a>#}
                                                 <a class="fa fa-pencil icon edit-row"  onclick="post('/api/edit_case/', {'id':'{{ row.id }}'})"></a>
