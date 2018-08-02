@@ -193,10 +193,12 @@
         <th>Response Time</th>
         <th>Detail</th>
     </tr>
+    {% for foo in resultList %}
+
     {% for record in records %}
         <tr>
             <th class="{{ record.status }}" style="width:5em;">
-            {{ record.status }}</td>
+            <td>{{ record.status }}</td>
             <td>{{ record.name }}</td>
             <td style="text-align:center;width:6em;">{{ '%0.1f'| format(record.response_time|float) }} ms</td>
             <td class="detail">
@@ -228,5 +230,6 @@
             </td>
         </tr>
     {% endfor %}
+{% endfor %}
 </table>
 </body>

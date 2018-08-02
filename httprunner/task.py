@@ -170,7 +170,7 @@ class HttpRunner(object):
             sys.exit(1)
 
         result = self.runner.run(task_suite)
-
+        print('run_result',result)
         output = {}
         for task in task_suite.tasks:
             output.update(task.output)

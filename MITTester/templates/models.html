@@ -70,7 +70,7 @@
                                             <td >
                                                 <a class="fa fa-pencil icon edit-row" href="/edit_models.html?id={{ row.id }}"></a>
                                                 <a class="fa fa-trash-o fa-fw"></a>
-                                                <a class="fa fa-bug"></a>
+                                                <a class="fa fa-bug" onclick="post('/api/run_case/',{'id':'{{ row.id }}','mode':'run_by_module'})"></a>
 
                                             </td>
                                         </tr>
@@ -101,7 +101,50 @@
     <!-- Peity -->
     <script src="../../static/js/bootstrap-table-demo.js"></script>
 
-
+    <script>
+        function runtest(case_id) {
+            var id=case_id;
+            var mode='run_by_module';
+            var testcase = {
+                "id":id,
+                "mode":mode
+            };
+            $.ajax({
+                type:'post',
+                url:'/api/run_case/',
+                data:testcase,
+                dataType: 'JSON',
+                success:function (data) {
+                    var obj=window.open("about:blank");
+                    obj.document.write(data);
+                }
+            })
+        }
+    </script>
+    <script>
+   function post(URL, PARAMS) {
+    var temp = document.createElement("form");
+    temp.action = URL;
+    temp.method = "post";
+    if (URL == '/api/del_case/') {
+        temp.target = '_self';
+    }
+    else{
+        temp.target = "_self";
+    }
+    temp.style.display = "none";
+    console.log(temp);
+    for (var x in PARAMS) {
+        var opt = document.createElement("input");
+        opt.name = x;
+        opt.value = PARAMS[x];
+        temp.appendChild(opt);
+    }
+    document.body.appendChild(temp);
+    temp.submit();
+    return temp;
+   }
+</script>
 
 </body>
 

@@ -1,30 +1,32 @@
-
 # Create your models here.
 
 from logic.DBlogic import *
 
 
 class BaseTable(models.Model):
-
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     update_time = models.DateTimeField('更新时间', auto_now=True)
+
     class Meta:
         abstract = True
         verbose_name = "公共字段表"
         db_table = 'BaseTable'
 
+
 class ConfigInfo(BaseTable):
     class Meta:
         verbose_name = '项目配置'
         db_table = 'ConfigInfo'
-    status=models.CharField('状态配置',max_length=50)
+
+    status = models.CharField('状态配置', max_length=50)
+
 
 class ProjectInfo(BaseTable):
     class Meta:
         verbose_name = '项目信息'
         db_table = 'ProjectInfo'
 
-    project_name = models.CharField('项目名称',max_length=50)
+    project_name = models.CharField('项目名称', max_length=50)
     responsible_name = models.CharField('负责人', max_length=20)
     test_user = models.CharField('测试人员', max_length=100)
     dev_user = models.CharField('开发人员', max_length=100)
@@ -37,17 +39,17 @@ class ProjectInfo(BaseTable):
     def __str__(self):
         return self.project_name
 
-class ModelsInfo(BaseTable):
 
+class ModelsInfo(BaseTable):
     class Meta:
         verbose_name = '模块信息'
         db_table = 'ModelsInfo'
 
-    models_name=models.CharField('模块名称',max_length=50)
-    models_desc = models.CharField('模块概述',max_length=500)
-    status = models.ForeignKey(ConfigInfo,on_delete=models.CASCADE)
+    models_name = models.CharField('模块名称', max_length=50)
+    models_desc = models.CharField('模块概述', max_length=500)
+    status = models.ForeignKey(ConfigInfo, on_delete=models.CASCADE)
     other_desc = models.CharField('其他信息', max_length=100, null=True)
-    belong_project=models.ForeignKey(ProjectInfo,on_delete=models.CASCADE,)
+    belong_project = models.ForeignKey(ProjectInfo, on_delete=models.CASCADE, )
     objects = ModuleInfoManager()
 
     def __str__(self):
@@ -69,13 +71,5 @@ class CaseInfo(BaseTable):
     status = models.IntegerField('有效/无效', default=1)
     objects = TestCaseInfoManager()
 
-
-
-
-
     def __str__(self):
         return self.name
-
-
-
-

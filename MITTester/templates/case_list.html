@@ -39,8 +39,11 @@
                                     <button type="button" class="btn btn-outline btn-default">
                                         <i class="glyphicon glyphicon-heart" aria-hidden="true"></i>
                                     </button>
-                                    <button type="button" class="btn btn-outline btn-default">
+                                    <button type="button" id="exBtn" class="btn btn-outline btn-default" onclick=createInput() >
                                         <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                    </button>
+                                    <button class="btn btn-outline btn-default">
+                                        <a href="../../static/测试用例.xlsx">下载模板</a>
                                     </button>
                                 </div>
                                 <table id="exampleTableEvents" data-height="400" data-mobile-responsive="true">
@@ -59,6 +62,7 @@
                                     </thead>
                                     <tbody id="tb">
                                     {% for row in case_list %}
+                                        {{ row }}
                                         <tr tb_id="{{ row.id }}">
                                             <td name="case_id">{{ row.id }}</td>
                                             <td name="case_id">{{ row.id }}</td>
@@ -99,6 +103,7 @@
     <script src="../../static/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
     <script src="../../static/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
     <script src="../../static/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../static/js/xlsx.full.min.js"></script>
     <!-- Peity -->
     <script src="../../static/js/bootstrap-table-demo.js"></script>
     <script>
@@ -126,8 +131,14 @@
     var temp = document.createElement("form");
     temp.action = URL;
     temp.method = "post";
-    temp.target = "_blank";
+    if (URL == '/api/del_case/') {
+        temp.target = '_self';
+    }
+    else{
+        temp.target = "_self";
+    }
     temp.style.display = "none";
+    console.log(temp);
     for (var x in PARAMS) {
         var opt = document.createElement("input");
         opt.name = x;
@@ -156,13 +167,121 @@
                 window.history.back();
                 window.location.reload();
             }
-
         })
-
-
     }
 </script>
-
+<script>
+    $('#exBtn').after('<input type="file" id="load_xls" name="file" style="display:none" onchange ="importf(this)">');
+    $('#exBtn').click(function(){
+        document.getElementById("load_xls").click();
+    });
+    var wb;//读取完成的数据
+    var rABS = false; //是否将文件读取为二进制字符串
+    function importf(obj) {//导入
+        if(!obj.files) {
+            return;
+        }
+        var f = obj.files[0];
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var data = e.target.result;
+            if(rABS) {
+                wb = XLSX.read(btoa(fixdata(data)), {//手动转化
+                    type: 'base64'
+                });
+            } else {
+                wb = XLSX.read(data, {
+                    type: 'binary'
+                });
+            }
+            //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
+            //wb.Sheets[Sheet名]获取第一个Sheet的数据
+            {#document.getElementById("demo").innerHTML= JSON.stringify( XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]) );#}
+            console.log(JSON.stringify(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])));
+            var exData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+            console.log(exData);
+            var data = exData[0]['varibles'];
+            for (var value in data){
+                console.log(value);
+            }
+            var dataJson = data;
+            {#var data = {"test":"1","1":"1"};#}
+            console.log(dataJson);
+            console.log(typeof (dataJson));
+            console.log(typeof(JSON.stringify(dataJson)));
+            console.log(typeof(JSON.parse(JSON.stringify(dataJson))));
+            for (var j=0; j<=exData.length; j++){
+                var test = {
+                    'test':{
+                    'name':{
+                        'case_name':exData[j]["用例名称"],
+                        'belong_project_id': exData[j]['模块'],
+                        'models_name': exData[j]['项目'],
+                        'include': '',
+                        'author': exData[j]['author']
+                    },
+                    'variables': {
+                        'cell1_keyvariables1': exData[j]['validate_key'],
+                        'cell2_valuevariables1': exData[j]['validate_value']
+                    },
+                    'setup': {
+                        'cell1_keysetup2': exData[j]['setup_key'],
+                        'cell2_valuesetup2': exData[j]['setup_value']
+                    },
+                    'request': {
+                        'url': exData[j]['apiurl'],
+                        'method': exData[j]['method'],
+                        'headers': {
+                            'cell1_keyheader5': exData[j]['headers_key'],
+                            'cell2_valueheader5': exData[j]['headers_value']
+                        },
+                        'type': exData[j]['dataType'],
+                        'request_data': {
+                            'cell1_keydata4': exData[j]['data_key'],
+                            'cell2_valuedata4': exData[j]['data_value']
+                        }
+                    },
+                    'teardown': {
+                        'cell1_keyteardown3': exData[j]['teardown_key'],
+                        'cell2_valueteardown3': exData[j]['teardown_value']
+                    },
+                    'extract': {
+                        'cell1_keyextract6': exData[j]['extract_key'],
+                        'cell2_valueextract6': exData[j]['extract_value']
+                    },
+                    'validate': {
+                        'cell1_keyvalidate7': exData[j]['validate_key'],
+                        'cell_2comparatorvalidate7': 'equals',
+                        'cell3_valuevalidate7': exData[j]['validate_value']
+                    }
+                }};
+                console.log(test);
+                $.ajax({
+                    type: "post",
+                    url: '/api/add_case/',
+                    data: JSON.stringify(test),
+                    contentType: "application/json",
+                    success: function (data) {
+                        {#window.location.reload();#}
+                    }
+                });
+            }
+        };
+        if(rABS) {
+            reader.readAsArrayBuffer(f);
+        } else {
+            reader.readAsBinaryString(f);
+        }
+    }
+    function fixdata(data) { //文件流转BinaryString
+                var o = "",
+                    l = 0,
+                    w = 10240;
+                for(; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
+                o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+                return o;
+            }
+</script>
 
 </body>
 

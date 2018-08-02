@@ -12,6 +12,7 @@ from httprunner.cli import *
 
 
 def run_by_single(id):
+    print("run_by_single:", id)
     testcase_list = []
     obj = CaseInfo.objects.get(id=id, status=1)
     module = obj.belong_module_id
@@ -31,7 +32,7 @@ def run_by_single(id):
                                                        status=1).request
             testcase_list.append(eval(include_request))
         testcase_list.append(eval(request))
-        print('单个用例预运行的数据',testcase_list)
+        print('单个用例预运行的数据', testcase_list)
         return testcase_list
 
 
@@ -41,9 +42,12 @@ def run_by_single(id):
 def run_by_module(id):
     testcase_lists = []
     obj = ModelsInfo.objects.get(id=id, status=1)
+    print(obj)
     test_index_list = CaseInfo.objects.filter(belong_module=obj, type=1, status=1).values_list('id')
+    print(test_index_list)
     for index in test_index_list:
         testcase_lists.append(run_by_single(index[0]))
+    print('testcase_lists', testcase_lists)
     return testcase_lists
 
 
@@ -69,12 +73,15 @@ def get_result(test_lists):
         },
         "records": [],
     }
+    print("test_lists",test_lists)
+    resultList = []
     for index in range(len(test_lists)):
         result = main_ate(test_lists[index])
-
         if index == 0:
             summary["time"]["start_at"] = result["time"].pop("start_at")
+        resultList.append(result)
 
+    return resultList
 
 
 '''单个项目组装所有test'''

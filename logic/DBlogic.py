@@ -79,6 +79,14 @@ class ProjectInfoManager(models.Manager):
         else:
             return self.all()
 
+    def del_project_info(self,id):
+        try:
+            if self.filter(id=int(id)).filter().count() > 1:
+                self.get(id=int(id)).status = 2
+                self.save()
+        except:
+            return "不能删除"
+
 
 '''模块信息表操作'''
 
@@ -225,9 +233,9 @@ class TestCaseInfoManager(models.Manager):
         :param belong_project:
         :return:
         '''
-        print('通过模块名和项目名统计单个项目的case数量',name, module_name, belong_project)
+        print('通过模块名和项目名统计单个项目的case数量', name, module_name, belong_project)
         return self.filter(belong_module_id=module_name).filter(name__exact=name).filter(
-            belong_project__exact=belong_project).count()
+            belong_project__exact=belong_project).filter(status__exact=1).count()
 
     def get_case_by_id(self, index, type=True):
         '''
@@ -241,15 +249,15 @@ class TestCaseInfoManager(models.Manager):
         else:
             return self.get(id=index).name
 
-    def del_case(self,id):
+    def del_case(self, id):
         try:
-            obj =self.get(id=id)
-            status=self.values('status').filter(id=id)
-            if status[0].get('status') ==1:
-                obj.status=2
+            obj = self.get(id=id)
+            status = self.values('status').filter(id=id)
+            if status[0].get('status') == 1:
+                obj.status = 2
                 obj.save()
             else:
-                obj.status =1
+                obj.status = 1
                 obj.save()
         except:
             #print('出现bug了')

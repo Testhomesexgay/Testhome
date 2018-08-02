@@ -30,6 +30,12 @@ def add_project_data(type, **kwargs):
     return 'ok'
 
 
+
+def del_projectes(id):
+    info = ProjectInfo.objects
+    info.del_project_info(id)
+
+
 '''模块数据落地'''
 
 
@@ -77,12 +83,12 @@ def add_case_data(type, **kwargs):
     try:
         if type:
             print('来到这里,这里新增')
-            models_id =module_opt.values('id').get(models_name=module)
+            models_id = module_opt.values('id').get(models_name=module)
             print(models_id)
             model_id = str(models_id.get('id'))
-            if case_opt.get_case_name(name,model_id, project) < 1:
+            if case_opt.get_case_name(name, model_id, project) < 1:
                 # belong_module = ModelsInfo.objects.get_module_name(module, type=False, project=project)
-                case_opt.insert_case(model_id,**kwargs)
+                case_opt.insert_case(model_id, **kwargs)
             else:
                 return '用例或配置已存在，请重新编辑'
         else:

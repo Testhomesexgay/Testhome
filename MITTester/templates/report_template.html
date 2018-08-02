@@ -152,6 +152,13 @@
 
 <h2>Summary</h2>
 <table id="summary">
+{% for foo in result %}
+
+{% for time in foo.time %}
+{{ time.duration }}
+{% endfor %}
+{% endfor %}
+
 
     <tr>
         <th>START AT</th>
@@ -161,6 +168,7 @@
         <th>DURATION</th>
         <td colspan="4">{{ time.duration|floatformat:3 }} seconds</td>
     </tr>
+
     <tr>
         <th>PLATFORM</th>
         <td>HttpRunner {{ platform.httprunner_version }} </td>
@@ -195,7 +203,9 @@
         <th>Response Time</th>
         <th>Detail</th>
     </tr>
-    {% for record in records %}
+{% for foo in result %}
+
+    {% for record in foo.records %}
         <tr>
             <th class="{{ record.status }}" style="width:5em;">{{ record.status }}</th>
             <td>{{ record.name }}</td>
@@ -231,5 +241,6 @@
             </td>
         </tr>
     {% endfor %}
+{% endfor %}
 </table>
 </body>
