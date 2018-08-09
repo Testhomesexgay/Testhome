@@ -138,10 +138,17 @@ def edit_case(request):
 
 
 def del_case(request):
+
     id = request.POST.get('id')
     msg = del_cases(id)
     # return HttpResponseRedirect('/case_list.html','用例已删除')
     return HttpResponse(get_ajax_msg(msg, '用例已删除'))
+    if request.is_ajax():
+        del_case = json.loads(request.body.decode('utf-8'))
+        msg=del_cases(del_case.get('id'))
+        return HttpResponse(get_ajax_msg(msg, '用例已删除'))
+
+
 
 
 
@@ -242,6 +249,15 @@ def run_test(request):
             test_lists = run_by_module(id)
             resultList = get_result(test_lists)
             return render_to_response('report_template.html', {'result': resultList})
+            result = main_ate(run_by_single(id))
+            print('test_result',result)
+            return render_to_response('report_template.html', result)
+        # elif mode == 'run_by_module':
+        #     test_lists = run_by_module(id)
+        #     print('module_test_lists',test_lists)
+        #     result = get_result(test_lists)
+        #     print('module_result', result)
+        #     return render_to_response('report_template.html', result)
         elif mode == 'run_by_project':
             test_lists = run_by_project(id)
             resultList = get_result(test_lists)
@@ -252,11 +268,20 @@ def run_test(request):
 
 
 
-'''参数化传递'''
-def parameterize():
-    pass
 
 
+def run_batch_test(request):
+    if request.is_ajax():
+        id = json.loads(request.body.decode('utf-8'))
+        print(id)
+        test_lists = run_by_batch(id)
+        print(test_lists)
+    # if request.method == 'POST':
+    #
+    #     test_lists = run_by_batch(request.body.decode('ascii').split('&'))
+    #     print (test_lists)
+    #     result = get_result(test_lists)
+    #     return render_to_response('report_template.html', result)
 
 
 

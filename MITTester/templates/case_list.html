@@ -33,7 +33,7 @@
                                     用例列表
                                 </div>
                                 <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
-                                    <a type="button" class="btn btn-outline btn-default" href="/add_project/">
+                                    <a type="button" class="btn btn-outline btn-default" href="add_case.html">
                                         <i class="glyphicon glyphicon-plus" aria-hidden="true" ></i>
                                     </a>
                                     <button type="button" class="btn btn-outline btn-default">
@@ -71,12 +71,12 @@
                                             <td name="belong_module_id">{{ row.belong_module.models_name }}</td>
                                             <td name="author">{{ row.author }}</td>
                                             <td name="create_time">{{ row.create_time }}</td>
-                                            <td name="status">{{ row.status }}</td>
+                                            <td name="status" id="{{ row.status }}">{{ row.status }}</td>
                                             <td >
 {#                                                <a class="fa fa-pencil icon edit-row"  href="/edit_case.html?id={{ row.id }}"></a>#}
                                                 <a class="fa fa-pencil icon edit-row"  onclick="post('/api/edit_case/', {'id':'{{ row.id }}'})"></a>
                                                 <a class="fa fa-bug" onclick="post('/api/run_case/', {'id':'{{ row.id }}', 'mode':'run_by_test'})"></a>
-                                                <a class="fa fa-trash-o fa-fw" onclick="post('/api/del_case/',{'id':'{{ row.id }}'})"></a>
+                                                <a class="fa fa-trash-o fa-fw" onclick="deletecase('{{ row.id }}')"></a>
 
                                             </td>
                                         </tr>
@@ -127,16 +127,44 @@
         }
     </script>
     <script>
+        function deletecase(case_id) {
+            var delcase = {
+                "id": case_id
+            };
+            console.log(delcase);
+            $.ajax({
+                type: 'post',
+                url: '/api/del_case/',
+                data: JSON.stringify(delcase),
+                contentType: "application/json",
+                success: function (data) {
+                    alert(data);
+                    window.location.reload();
+                }
+
+            })
+
+
+        }
+    </script>
+    <script>
    function post(URL, PARAMS) {
     var temp = document.createElement("form");
     temp.action = URL;
     temp.method = "post";
+<<<<<<< HEAD
     if (URL == '/api/del_case/') {
         temp.target = '_self';
     }
     else{
         temp.target = "_self";
     }
+=======
+    //设置本页面的默认连接在新页面打开
+    temp.target = "_blank";
+    //设置在本页面打开
+    {#temp.target = "_self";#}
+>>>>>>> 5ecd8f7e2157cbc37c84d419cb18bdf8d91ba72f
     temp.style.display = "none";
     console.log(temp);
     for (var x in PARAMS) {
@@ -150,6 +178,7 @@
     return temp;
    }
 </script>
+<<<<<<< HEAD
 <script>
     function deletecase(case_id) {
         var id = case_id;
@@ -282,6 +311,10 @@
                 return o;
             }
 </script>
+=======
+
+
+>>>>>>> 5ecd8f7e2157cbc37c84d419cb18bdf8d91ba72f
 
 </body>
 

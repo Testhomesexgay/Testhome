@@ -189,8 +189,6 @@ def config_info_logic(type=True, **kwargs):
     variables = config.pop('variables')
     if variables:
         config.setdefault('variables', key_value_list(**variables))
-        cc=config.setdefault('variables', key_value_list(**variables))
-        print(cc)
     kwargs.setdefault('config', config)
 
     return add_config_data(type, **kwargs)

@@ -33,6 +33,7 @@ class ProjectInfo(BaseTable):
     publish_app = models.CharField('相关应用', max_length=60)
     simple_desc = models.CharField('简要描述', max_length=500)
     other_desc = models.CharField('其他信息', max_length=100, null=True)
+    # status = models.ForeignKey(ConfigInfo, on_delete=models.CASCADE)
     status = models.IntegerField('有效/无效', default=1)
     objects = ProjectInfoManager()
 
@@ -68,6 +69,7 @@ class CaseInfo(BaseTable):
     include = models.CharField('包含config/test', max_length=200, null=True)
     author = models.CharField('编写人员', max_length=20)
     request = models.TextField('请求信息')
+    # status = models.ForeignKey(ConfigInfo, on_delete=models.CASCADE)
     status = models.IntegerField('有效/无效', default=1)
     objects = TestCaseInfoManager()
 
